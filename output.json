@@ -1,0 +1,22 @@
+{
+    "tweets": [
+        {
+            "user": {
+                "id": "1638848276",
+                "name": "Oaken Man",
+                "screen_name": "Oaken_Man",
+                "profile_image_url": "http://pbs.twimg.com/profile_images/909875853928132608/DvZ1BSpx_normal.jpg",
+                "verified": false,
+                "url": null
+            },
+            "id": "1340417945881751553",
+            "created_at": "Sat Dec 19 22:05:16 +0000 2020",
+            "favorite_count": 0,
+            "retweet_count": 0,
+            "text": "test api python",
+            "retweeted_status": {},
+            "quoted_status": {},
+            "user_mentions": []
+        }
+    ]
+}
