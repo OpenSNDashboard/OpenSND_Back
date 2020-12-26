@@ -149,12 +149,19 @@ def getUserTimeline(user_id=None, username=None, since_id=None, include_rts=True
 
 # Get lasts tweets of the home timeline
 # TODO: add an option to exclude retweets
-def getHomeTimeline(since_id=None, exclude_replies=True, count=20, new=True):
+def getHomeTimeline(since_id=None, include_rts=False, exclude_replies=True, count=20, new=False):
     if new:
         since_id = get_last_seen()
     tweets: List[TwitterModel] = api.GetHomeTimeline(since_id=since_id,
                                                      exclude_replies=exclude_replies,
                                                      count=count)
+    if not include_rts:
+        for tweet in tweets:
+            #print(tweet.AsDict())
+            if hasattr(tweet.AsDict(), 'retweeted_status'):
+                print("removed ", tweet.fulltext)
+                tweets.remove(tweet)
+
     if tweets:
         update_last_seen(tweets[0].id)
     return tweets
