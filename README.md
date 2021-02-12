@@ -37,4 +37,4 @@
 **Todo**:
 
 - Calls:
-    - destroyRetweet
+    - destroyRetweet -> need to use destroyStatus ?

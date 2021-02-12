@@ -1,0 +1,39 @@
+{
+  "id": 2,
+  "name": "minecraft", 
+  "reddit": [
+    {
+      "filter": "hot", 
+      "name": "Minecraft"
+    }, 
+    {
+      "filter": "hot", 
+      "name": "MinecraftCommands"
+    }, 
+    {
+      "filter": "hot", 
+      "name": "qualityredstone"
+    }, 
+    {
+      "filter": "hot", 
+      "name": "SciCraft"
+    }, 
+    {
+      "filter": "hot", 
+      "name": "technicalminecraft"
+    }
+  ], 
+  "twitter": [
+    {
+      "include_rpl": false, 
+      "include_rt": false, 
+      "username": "xisumavoid"
+    }, 
+    {
+      "include_rpl": false, 
+      "include_rt": false, 
+      "username": "SimplySarc"
+    }
+  ]
+}
+
