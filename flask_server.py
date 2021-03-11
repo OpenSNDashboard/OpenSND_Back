@@ -13,7 +13,6 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
 dao = DAO()
 
-
 def exists(id):
     dashboards = os.listdir('./dashboards')
     for dashboard in dashboards:
@@ -26,7 +25,7 @@ def getNextId():
     maxId = 0
     dashboards = os.listdir('./dashboards')
     for dashboard in dashboards:
-        id = dashboard.split('.')[0]
+        id = int(dashboard.split('.')[0])
         if id > maxId:
             maxId = id
     return maxId + 1
@@ -69,6 +68,8 @@ def isValidDashboard(dashboard):
 
 
 # Configuration générale
+# GET /api/config
+# PUT /api/config "Content-type: application/json" main_config.json
 @app.route('/api/config', methods=['GET', 'PUT'])
 def manageMainConfig():
     # RÉCUPÉRATION DE LA MAIN CONFIG
@@ -84,12 +85,13 @@ def manageMainConfig():
             if isValidSettings(request.json):
                 with open('settings.json', 'w') as settings_file:
                     # Prettify le json avant de l'écrire dans le fichier
-                    json.dump(request.json, settings_file)
+                    json.dump(request.json, settings_file, indent=4)
                 return request.json, status.HTTP_200_OK
 
         raise exceptions.ParseError()
 
 
+# GET /api/dashboards
 @app.route('/api/dashboards', methods=['GET'])
 def getAllDashboards():
     data = {}
@@ -106,6 +108,7 @@ def getAllDashboards():
     return data, status.HTTP_200_OK
 
 
+# POST /api/dashboards "Content-type: application/json" dashboard.json
 @app.route('/api/dashboards', methods=['POST'])
 def addDashboard():
     # CRÉATION DE DASHBOARD
@@ -113,13 +116,16 @@ def addDashboard():
         if isValidDashboard(request.json):
             id = str(getNextId())
             with open('./dashboards/' + id + '.json', 'w') as dashboard_settings:
-                json.dump(request.json, dashboard_settings)
+                json.dump(request.json, dashboard_settings, indent=4)
             dao.parseDashboard(id)
             return request.json, status.HTTP_201_CREATED
 
     raise exceptions.ParseError()
 
 
+# GET /api/dashboards/<id>
+# PUT /api/dashboards/<id> "Content-type: application/json" dashboard.json
+# DELETE /api/dashboards/<id>
 @app.route('/api/dashboards/<string:id>', methods=['GET', 'PUT', 'DELETE'])
 def manageDashboards(id):
     if not exists(id):
@@ -137,9 +143,9 @@ def manageDashboards(id):
         if "application/json" in request.headers["content-type"]:
             if isValidDashboard(request.json):
                 with open('./dashboards/' + id + '.json', 'w') as dashboard_settings:
-                    # Prettify le json avant de l'écrire dans le fichier
-                    json.dump(request.json, dashboard_settings)
-                    dao.parseDashboard(id)
+                    # TODO: Prettify le json avant de l'écrire dans le fichier
+                    json.dump(request.json, dashboard_settings, indent=4)
+                dao.parseDashboard(id)
                 return request.json, status.HTTP_200_OK
 
         raise exceptions.ParseError()
@@ -151,6 +157,7 @@ def manageDashboards(id):
         return '', status.HTTP_204_NO_CONTENT
 
 
+# GET /api/dashboards/<id>/content?since=<unix_timestamp>
 @app.route('/api/dashboards/<string:id>/content', methods=['GET'])
 def getContent(id):
     if not exists(id):
@@ -160,9 +167,9 @@ def getContent(id):
         # On pourrait aussi utiliser datetime.fromisoformat(str) mais ça me semble risqué
         since = datetime.fromtimestamp(int(request.args['since']))
     else:
-        since = datetime.now()
+        since = None # datetime.now()
 
-    data = dao.getContent(dashboard=id, since=since)
+    data = dao.getContent(id=id, since=since)
 
     return data, status.HTTP_200_OK
 
