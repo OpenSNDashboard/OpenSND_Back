@@ -3,6 +3,11 @@ from DAOs import reddit_dao
 
 import json
 import os
+import time
+
+
+def sortTweets(tweets):
+    return sorted(tweets, key=lambda i: i["created_at"], reverse=True)
 
 
 class DAO:
@@ -17,31 +22,35 @@ class DAO:
         print(self.dashboards)
 
     def getContent(self, id, since=None, limit=200):
-        twitterLimit = limit // 2
+        twitterLimit = int(limit * 0.75)
         twitterUserLimit = twitterLimit // len(self.dashboards[id]["twitter"])
 
-        tweets = []
+        redditLimit = int(limit * 0.25)
+        redditSubLimit = redditLimit // len(self.dashboards[id]["reddit"])
 
+        # Recover tweets of differents users
+        tweets = []
         for twitterUser in self.dashboards[id]["twitter"]:
-            tweets.append(twitter_dao.getUserTimeline(username=twitterUser["username"],
+            tweets.extend(twitter_dao.getUserTimeline(username=twitterUser["username"],
                                                       since_id=since,
                                                       include_rts=twitterUser["include_rt"],
                                                       exclude_replies=twitterUser["include_rpl"],
                                                       count=twitterUserLimit))
 
-        # SORT TWEETS BY DATE
+        # Sort tweets by date
+        tweets = sortTweets(tweets)
 
+        # Recover submissions of differents subreddits
         submissions = []
-
         for subreddit in self.dashboards[id]["reddit"]:
-            submissions.append(reddit_dao.getSubmissions(subreddits=[subreddit["name"]],
+            submissions.extend(reddit_dao.getSubmissions(subreddits=[subreddit["name"]],
                                                          filter=subreddit["filter"],
                                                          timeFilter=(subreddit["timeFilter"] if hasattr(subreddit,
-                                                                                                        "timeFilter") else 'hour')))
+                                                                                                        "timeFilter") else 'hour'),
+                                                         limit=redditSubLimit))
 
+        # Shuffle tweets and submissions
         content = []
-
-        # SHUFFLE TWEETS AND SUBMISSIONS
         for i in range(limit):
             if i % 4 == 0:
                 if len(submissions) > 0:
@@ -50,8 +59,8 @@ class DAO:
                 if len(tweets) > 0:
                     content.append(tweets.pop(0))
 
-        with open("result.json", "w") as file:
-            json.dump(content, file)
+        # with open("result.json", "w") as file:
+        #     json.dump(content, file, indent=4, ensure_ascii=True)
 
         return content
 
@@ -65,3 +74,14 @@ class DAO:
         else:
             self.dashboards.pop(id)
             print(f'<DAO> DASHBOARD {id} REMOVED')
+
+
+# ===== TEST MAIN =====
+os.chdir('D:/User/Tom/Mes documents/GitHub/OpenSND_Back')
+
+dao = DAO()
+
+start = time.time()
+dao.getContent(id='2', limit=50)
+end = time.time()
+print(f'content recovered in {end - start:.2f}s')

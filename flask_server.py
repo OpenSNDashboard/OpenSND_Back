@@ -3,15 +3,17 @@ from flask import request
 
 import os
 import json
-from datetime import datetime
 
 from DAOs.main_dao import DAO
+
+LIMIT = 50      # Nombre d'items récupérés à chaque requête GET /api/dashboards/$id/content
 
 app = FlaskAPI("OpenSND")
 app.config['DEBUG'] = True
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
 dao = DAO()
+
 
 def exists(id):
     dashboards = os.listdir('./dashboards')
@@ -84,7 +86,6 @@ def manageMainConfig():
         if "application/json" in request.headers["content-type"]:
             if isValidSettings(request.json):
                 with open('settings.json', 'w') as settings_file:
-                    # Prettify le json avant de l'écrire dans le fichier
                     json.dump(request.json, settings_file, indent=4)
                 return request.json, status.HTTP_200_OK
 
@@ -143,7 +144,6 @@ def manageDashboards(id):
         if "application/json" in request.headers["content-type"]:
             if isValidDashboard(request.json):
                 with open('./dashboards/' + id + '.json', 'w') as dashboard_settings:
-                    # TODO: Prettify le json avant de l'écrire dans le fichier
                     json.dump(request.json, dashboard_settings, indent=4)
                 dao.parseDashboard(id)
                 return request.json, status.HTTP_200_OK
@@ -157,19 +157,18 @@ def manageDashboards(id):
         return '', status.HTTP_204_NO_CONTENT
 
 
-# GET /api/dashboards/<id>/content?since=<unix_timestamp>
+# GET /api/dashboards/<id>/content?since=<last tweet id>
 @app.route('/api/dashboards/<string:id>/content', methods=['GET'])
 def getContent(id):
     if not exists(id):
         raise exceptions.NotFound()
 
     if "since" in request.args:
-        # On pourrait aussi utiliser datetime.fromisoformat(str) mais ça me semble risqué
-        since = datetime.fromtimestamp(int(request.args['since']))
+        since = int(request.args['since'])
     else:
-        since = None # datetime.now()
+        since = None
 
-    data = dao.getContent(id=id, since=since)
+    data = dao.getContent(id=id, since=since, limit=LIMIT)
 
     return data, status.HTTP_200_OK
 

@@ -3,7 +3,7 @@
     "name": "minecraft",
     "reddit": [
         {
-            "filter": "hot",
+            "filter": "new",
             "name": "Minecraft"
         },
         {
@@ -11,11 +11,13 @@
             "name": "MinecraftCommands"
         },
         {
-            "filter": "hot",
+            "filter": "top",
+            "timeFilter": "month",
             "name": "qualityredstone"
         },
         {
-            "filter": "hot",
+            "filter": "top",
+            "timeFilter": "year",
             "name": "SciCraft"
         },
         {
@@ -26,13 +28,23 @@
     "twitter": [
         {
             "include_rpl": false,
-            "include_rt": false,
+            "include_rt": true,
             "username": "xisumavoid"
         },
         {
             "include_rpl": false,
             "include_rt": false,
-            "username": "Notch"
+            "username": "SethBling"
+        },
+        {
+            "include_rpl": false,
+            "include_rt": false,
+            "username": "EthoLP"
+        },
+        {
+            "include_rpl": true,
+            "include_rt": true,
+            "username": "SimplySarc"
         }
     ]
 }

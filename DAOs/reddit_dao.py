@@ -1,27 +1,17 @@
 import praw
+import json
 from datetime import datetime
 
 
-# ============= TEMP : GET AUTHENTIFICATION TOKENS FROM FILE =============
-def getAuth():
-    with open("/home/tom/Documents/OpenSND/auth_reddit", 'r') as file:
-        lines = file.readlines()
-        client_id = lines[0].split(':')[1][:-1]
-        client_secret = lines[1].split(':')[1][:-1]
-        return client_id, client_secret
+# Create reddit API object
+def getApi():
+    with open("./settings.json", "r") as settingsFile:
+        settings = json.load(settingsFile)
 
-
-ci, cs = getAuth()
-
-
-# ========================================================================
-
-# Create a new reddit API object
-def getApi(client_id, client_secret, user_agent="my_user_agent"):
-    api = praw.Reddit(client_id=client_id,
-                      client_secret=client_secret,
-                      user_agent=user_agent)
-    return api
+        api = praw.Reddit(client_id=settings["reddit"]["client_id"],
+                          client_secret=settings["reddit"]["client_secret"],
+                          user_agent="my_user_agent")
+        return api
 
 
 # Crée un dictionnaire simplifié contenant les infos essentielles d'un post
@@ -33,6 +23,7 @@ def getApi(client_id, client_secret, user_agent="my_user_agent"):
 # - comment sont gérées les galeries (plusieurs photos) ?
 def simplified(post):
     simp = {
+        "type": "reddit",
         "id": post.id,
         # Infos sur l'auteur
         "author": post.author.name,
@@ -42,7 +33,7 @@ def simplified(post):
         "sub_display_name": post.subreddit.display_name,
         # Infos sur le post
         "title": post.title,
-        "created_utc": post.created_utc,
+        "created_at": str(datetime.fromtimestamp(post.created_utc)),
         "selftext": post.selftext,
         "permalink": post.permalink,  # r/<sub_display_name>/comments/<id>/<title>/
         "url": post.url,  # https://i.reddit.it/<random_string>(extension)
@@ -62,7 +53,7 @@ def simplified(post):
 # Renvoie des posts reddits au format JSON
 # TODO: utiliser des exceptions plutôt que des 'return False'
 def getSubmissions(subreddits=None, filter='hot', timeFilter='hour', limit=20):
-    api = getApi(ci, cs)
+    api = getApi()
 
     if timeFilter not in ['hour', 'day', 'week', 'month', 'year', 'all']:
         print("Reddit API Error: invalid time filter")
@@ -132,3 +123,5 @@ def getSubmissions(subreddits=None, filter='hot', timeFilter='hour', limit=20):
 
 # NOTES
 # random() renvoie que un seul post, l'implémenter quand même ou balec?
+
+
