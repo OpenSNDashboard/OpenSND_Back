@@ -77,11 +77,10 @@ class DAO:
 
 
 # ===== TEST MAIN =====
-os.chdir('D:/User/Tom/Mes documents/GitHub/OpenSND_Back')
 
-dao = DAO()
-
-start = time.time()
-dao.getContent(id='2', limit=50)
-end = time.time()
-print(f'content recovered in {end - start:.2f}s')
+# dao = DAO()
+#
+# start = time.time()
+# dao.getContent(id='2', limit=50)
+# end = time.time()
+# print(f'content recovered in {end - start:.2f}s')
