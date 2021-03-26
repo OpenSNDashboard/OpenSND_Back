@@ -28,6 +28,17 @@ def convertDatetime(created_at):
     return datetime.strftime(datetime.strptime(created_at, twitter_format), return_format)
 
 
+def extractVideoLink(media):
+    bestUrl = ""
+    bestBitrate = 0
+    for variant in media.video_info['variants']:
+        if variant['content_type'] == 'video/mp4':
+            if variant['bitrate'] > bestBitrate:
+                bestBitrate = variant['bitrate']
+                bestUrl = variant['url']
+    return bestUrl
+
+
 # Create a light dictionnary describing an user
 def lightUser(user):
     light = {
@@ -66,8 +77,16 @@ def lightTweet(tweet):
         "urls": [link.url for link in tweet.urls],
         "hashtags": [hashtag.text for hashtag in tweet.hashtags],
         # Medias
-        "medias": [{'url': med.media_url_https, 'type': med.type} for med in tweet.media] if tweet.media else []
+        "medias": []
     }
+
+    if tweet.media is not None:
+        for media in tweet.media:
+            if media.type == 'photo':
+                light["medias"].append({'type': 'photo', 'url': media.media_url_https})
+            elif media.type == 'video':
+                light["medias"].append({'type': 'video', 'url': extractVideoLink(media)})
+
     return light
 
 
@@ -89,11 +108,16 @@ def getUserTimeline(username, since_id=None, include_rts=True, exclude_replies=F
 
     posts = [lightTweet(t) for t in tweets]
 
+    # for t in tweets:
+    #    print(t)
+
     return posts
 
 
 # ===== TEST MAIN =====
-# TWEETS = getUserTimeline(username='UsulDuFutur')
-#
-# for TWEET in TWEETS:
-#     print(TWEET)
+import os
+os.chdir("../")
+TWEETS = getUserTimeline(username='_IDVL')
+
+for TWEET in TWEETS:
+    print(TWEET)

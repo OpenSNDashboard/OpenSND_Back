@@ -1,20 +1,28 @@
 from flask_api import FlaskAPI, status, exceptions
 from flask import request
+from flask_cors import CORS
 
 import os
 import json
 
 from DAOs.main_dao import DAO
 
-LIMIT = 50      # Nombre d'items récupérés à chaque requête GET /api/dashboards/$id/content
+# --------- CONST ---------
+LIMIT = 50  # Nombre d'items récupérés à chaque requête GET /api/dashboards/$id/content
 
-app = FlaskAPI("OpenSND")
-app.config['DEBUG'] = True
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
+# --------- MAIN ---------
+if __name__ == "__main__":
+    app = FlaskAPI("OpenSND")
+    app.config['DEBUG'] = True
+    app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
-dao = DAO()
+    cors = CORS(app, ressources={r"/api/*": {"origins": "*"}})
+
+    dao = DAO()
+    app.run()
 
 
+# --------- METHODS ---------
 def exists(id):
     dashboards = os.listdir('./dashboards')
     for dashboard in dashboards:
@@ -68,6 +76,8 @@ def isValidDashboard(dashboard):
     # SINON
     return True
 
+
+# --------- ENDPOINTS ---------
 
 # Configuration générale
 # GET /api/config
@@ -171,8 +181,3 @@ def getContent(id):
     data = dao.getContent(id=id, since=since, limit=LIMIT)
 
     return data, status.HTTP_200_OK
-
-
-# --------- MAIN ---------
-if __name__ == "__main__":
-    app.run()
