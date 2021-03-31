@@ -10,7 +10,7 @@ import json
 
 # Create twitter API object
 def getApi():
-    with open("./settings.json", "r") as settingsFile:
+    with open("settings.json", "r") as settingsFile:
         settings = json.load(settingsFile)
 
         api = twitter.Api(consumer_key=settings["twitter"]["consumer_key"],
@@ -114,10 +114,11 @@ def getUserTimeline(username, since_id=None, include_rts=True, exclude_replies=F
     return posts
 
 
-# ===== TEST MAIN =====
-import os
-os.chdir("../")
-TWEETS = getUserTimeline(username='_IDVL')
-
-for TWEET in TWEETS:
-    print(TWEET)
+# # ===== TEST MAIN =====
+# import os
+#
+# os.chdir("../")
+# TWEETS = getUserTimeline(username='_IDVL')
+#
+# for TWEET in TWEETS:
+#     print(TWEET)

@@ -3,7 +3,6 @@ from DAOs import reddit_dao
 
 import json
 import os
-import time
 
 
 def sortTweets(tweets):
