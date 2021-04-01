@@ -1,5 +1,5 @@
-from flask_api import FlaskAPI, status, exceptions
-from flask import request
+from flask_api import status, exceptions
+from flask import Flask, request
 from flask_cors import CORS
 
 import os
@@ -10,16 +10,15 @@ from DAOs.main_dao import DAO
 # --------- CONST ---------
 LIMIT = 50  # Nombre d'items récupérés à chaque requête GET /api/dashboards/$id/content
 
-# --------- MAIN ---------
-if __name__ == "__main__":
-    app = FlaskAPI("OpenSND")
-    app.config['DEBUG'] = True
-    app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
+app = Flask(__name__)
+app.config['DEBUG'] = True
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
-    cors = CORS(app, ressources={r"/api/*": {"origins": "*"}})
+# cors = CORS(app, ressources={r"/api/*": {"origins": "*"}})
+# CORS(app)
 
-    dao = DAO()
-    app.run()
+dao = DAO()
+
 
 
 # --------- METHODS ---------
@@ -180,4 +179,12 @@ def getContent(id):
 
     data = dao.getContent(id=id, since=since, limit=LIMIT)
 
+    # On convertit en dico
+    data = {"data": data}
+
     return data, status.HTTP_200_OK
+
+
+# --------- MAIN ---------
+if __name__ == "__main__":
+    app.run()
