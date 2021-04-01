@@ -15,11 +15,9 @@ app.config['DEBUG'] = True
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
 # cors = CORS(app, ressources={r"/api/*": {"origins": "*"}})
-# CORS(app)
+CORS(app)
 
 dao = DAO()
-
-
 
 # --------- METHODS ---------
 def exists(id):

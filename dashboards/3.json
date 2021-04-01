@@ -1,0 +1,41 @@
+{
+  "id": 3,
+  "name": "politics",
+  "reddit": [
+    {
+      "filter": "hot",
+      "name": "europe"
+    },
+    {
+      "filter": "hot",
+      "name": "france"
+    },
+    {
+      "filter": "top",
+      "name": "worldnews",
+      "time_filter": "week"
+    }
+  ],
+  "twitter": [
+    {
+      "include_rpl": false,
+      "include_rt": true,
+      "username": "Usul"
+    },
+    {
+      "include_rpl": false,
+      "include_rt": true,
+      "username": "akraland"
+    },
+    {
+      "include_rpl": true,
+      "include_rt": true,
+      "username": "TaranisNews"
+    },
+    {
+      "include_rpl": false,
+      "include_rt": true,
+      "username": "NnoMan1"
+    }
+  ]
+}

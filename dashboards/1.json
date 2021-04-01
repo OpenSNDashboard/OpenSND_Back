@@ -1,42 +1,27 @@
 {
-  "id": 1,
-  "name": "politics", 
-  "reddit": [
-    {
-      "filter": "hot", 
-      "name": "europe"
-    }, 
-    {
-      "filter": "hot", 
-      "name": "france"
-    }, 
-    {
-      "filter": "top", 
-      "name": "worldnews", 
-      "time_filter": "week"
-    }
-  ], 
-  "twitter": [
-    {
-      "include_rpl": false, 
-      "include_rt": true, 
-      "username": "Usul"
-    }, 
-    {
-      "include_rpl": false, 
-      "include_rt": true, 
-      "username": "akraland"
-    }, 
-    {
-      "include_rpl": true, 
-      "include_rt": true, 
-      "username": "TaranisNews"
-    }, 
-    {
-      "include_rpl": false, 
-      "include_rt": true, 
-      "username": "NnoMan1"
-    }
-  ]
+    "id": 1,
+    "name": "Raspberry Pi",
+    "reddit": [
+        {
+            "filter": "new",
+            "name": "raspberry_pi"
+        },
+        {
+            "filter": "top",
+          "timeFilter": "month",
+            "name": "RASPBERRY_PI_PROJECTS"
+        }
+      ],
+    "twitter": [
+        {
+            "include_rpl": false,
+            "include_rt": false,
+            "username": "Raspberry_Pi"
+        },
+        {
+            "include_rpl": false,
+            "include_rt": true,
+            "username": "RaspberryPiFR"
+        }
+    ]
 }
-

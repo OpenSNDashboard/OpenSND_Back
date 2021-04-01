@@ -1,0 +1,28 @@
+{
+    "id": 4,
+    "name": "dev",
+    "reddit": [
+        {
+            "filter": "top",
+            "timeFilter": "month",
+            "name": "python"
+        },
+        {
+            "filter": "top",
+            "timeFilter": "month",
+            "name": "flask"
+        },
+        {
+            "filter": "top",
+            "timeFilter": "month",
+            "name": "angularjs"
+        }
+      ],
+    "twitter": [
+        {
+            "include_rpl": false,
+            "include_rt": true,
+            "username": "shiffman"
+        }
+    ]
+}
