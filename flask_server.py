@@ -104,16 +104,16 @@ def manageMainConfig():
 # GET /api/dashboards
 @app.route('/api/dashboards', methods=['GET'])
 def getAllDashboards():
-    data = {}
+    data = {"dashboards": []}
 
     # RÉCUPÉRATION DE TOUS LES DASHBOARDS
     dashboards = os.listdir('./dashboards')
     for dashboard in dashboards:
         print(dashboard)
         # TODO: vérifier si les fichiers sont bien des config json de dashboards
-        id = dashboard.split('.')[0]
+        # id = dashboard.split('.')[0]
         with open('./dashboards/' + dashboard, 'r') as dashboard_settings:
-            data[id] = json.load(dashboard_settings)
+            data["dashboards"].append(json.load(dashboard_settings))
 
     return data, status.HTTP_200_OK
 
